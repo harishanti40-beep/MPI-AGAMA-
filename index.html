@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Darsana Quest - Media Pembelajaran Interaktif Kelas XI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #FFE5EC 0%, #F0E6FF 50%, #E8F0FE 100%);
+      --primary: #5A189A;
+      --primary-light: #7B2CBF;
+      --accent-pink: #FF85A1;
+      --accent-yellow: #FFD166;
+      --accent-green: #06D6A0;
+      --accent-blue: #4EA8DE;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-dark: #2B2D42;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow-soft: 0 10px 25px rgba(90, 24, 154, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      max-width: 1024px;
+      height: 94vh;
+      max-height: 720px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      border: 3px solid #FFFFFF;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 55px;
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-status {
+      background: rgba(255, 255, 255, 0.25);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    /* NAVIGATION */
+    nav {
+      display: flex;
+      background-color: #F3E8FF;
+      padding: 6px 10px;
+      gap: 8px;
+      border-bottom: 2px solid #E9D5FF;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      background: white;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      color: #6B7280;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.82rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 10px rgba(90, 24, 154, 0.3);
+    }
+
+    .nav-item:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: #E5E7EB;
+    }
+
+    /* MAIN CONTAINER */
+    main {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .screen {
+      display: none;
+      height: 100%;
+    }
+
+    .screen.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* MASCOT / KARAKTER VISUAL */
+    .mascot-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #FFF0F5;
+      border: 2px dashed var(--accent-pink);
+      padding: 10px 15px;
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+    }
+
+    .mascot-avatar {
+      font-size: 2.2rem;
+      animation: bounce 2s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .mascot-text {
+      font-size: 0.85rem;
+      color: #4A154B;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* HERO CARD & FORM */
+    .hero-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      text-align: center;
+      border: 2px solid #F3E8FF;
+      margin: auto;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .hero-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+    }
+
+    .custom-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 2px solid #E9D5FF;
+      border-radius: var(--radius-md);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(90, 24, 154, 0.3);
+      width: 100%;
+    }
+
+    /* MATERI GRID (RESPONSIF HP LANDSCAPE) */
+    .materi-container {
+      display: flex;
+      gap: 15px;
+      height: 100%;
+    }
+
+    .tab-menu {
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .tab-link {
+      padding: 8px 12px;
+      background: white;
+      border: 2px solid #F3E8FF;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: #5A189A;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .tab-link.active {
+      background: #F3E8FF;
+      border-color: var(--primary);
+    }
+
+    .tab-pane {
+      flex: 1;
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 15px;
+      border: 2px solid #F3E8FF;
+      overflow-y: auto;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* KUIS & EVALUASI SUB-MATERI */
+    .quiz-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+    }
+
+    .quiz-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      border: 2px solid #F3E8FF;
+    }
+
+    .quiz-question {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .opt-btn {
+      padding: 8px 12px;
+      border: 2px solid #E9D5FF;
+      border-radius: 8px;
+      background: white;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .opt-btn.correct { background: #D1FAE5; border-color: #10B981; color: #065F46; }
+    .opt-btn.wrong { background: #FEE2E2; border-color: #EF4444; color: #991B1B; }
+
+    /* GAME TTS GRID (10 SOAL LENGKAP) */
+    .tts-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 15px;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .tts-grid-container {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 3px;
+      background: #5A189A;
+      padding: 6px;
+      border-radius: 12px;
+      max-width: 320px;
+      max-height: 320px;
+      margin: auto;
+    }
+
+    .tts-cell {
+      aspect-ratio: 1;
+      background: white;
+      position: relative;
+      border-radius: 4px;
+    }
+
+    .tts-cell.black {
+      background: #2D006B;
+    }
+
+    .tts-number {
+      position: absolute;
+      top: 1px;
+      left: 2px;
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .tts-input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      text-align: center;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      outline: none;
+      background: transparent;
+      font-weight: 700;
+    }
+
+    .tts-clues {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 12px;
+      border: 2px solid #F3E8FF;
+      overflow-y: auto;
+      font-size: 0.78rem;
+    }
+
+    .tts-clues h4 {
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    footer {
+      background: #F8F5FC;
+      padding: 6px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 2px solid #E9D5FF;
+      height: 35px;
+      flex-shrink: 0;
+    }
+
+    .progress-track {
+      width: 140px;
+      height: 8px;
+      background: #E5E7EB;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-green);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* MEDIA QUERY LAYAR LANDSCAPE HP */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .app-wrapper { height: 98vh; }
+      header { height: 40px; padding: 5px 15px; }
+      .brand-title { font-size: 1rem; }
+      nav { padding: 4px 8px; }
+      .nav-item { padding: 5px; font-size: 0.75rem; }
+      .mascot-box { padding: 5px 10px; margin-bottom: 6px; }
+      .mascot-avatar { font-size: 1.5rem; }
+      .mascot-text { font-size: 0.75rem; }
+      .quiz-options { grid-template-columns: 1fr 1fr; }
+      .opt-btn { padding: 5px 8px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+  <header>
+    <div class="brand-title">✨ DARSANA QUEST</div>
+    <div class="badge-status" id="userBadge">Siswa: Belum Login</div>
+  </header>
+
+  <nav>
+    <button class="nav-item active" id="btnCover" onclick="navigate('screenCover')">🏠 Beranda</button>
+    <button class="nav-item" id="btnMateri" onclick="navigate('screenMateri')" disabled>📚 Materi</button>
+    <button class="nav-item" id="btnKuis" onclick="navigate('screenKuis')" disabled>📝 Kuis Sub-Materi</button>
+    <button class="nav-item" id="btnGame" onclick="navigate('screenGame')" disabled>🧩 Game TTS</button>
+  </nav>
+
+  <main>
+    <!-- MASKOT DINAMIS -->
+    <div class="mascot-box">
+      <div class="mascot-avatar">🧘‍♀️</div>
+      <div class="mascot-text" id="mascotMessage">
+        Om Swastyastu! Selamat datang di Darsana Quest. Ketik namamu di bawah untuk memulai petualangan filsafat Hindu!
+      </div>
+    </div>
+
+    <!-- SCREEN 1: BERANDA -->
+    <div id="screenCover" class="screen active">
+      <div class="hero-card">
+        <h1 class="hero-title">Filsafat Darsana</h1>
+        <p style="color: #6B7280; font-size: 0.85rem; margin-bottom: 15px;">Modul Interaktif Hindu Religious Education Kelas XI</p>
+        
+        <input type="text" id="studentName" class="custom-input" placeholder="Nama Lengkap Siswa...">
+        <input type="text" id="groupName" class="custom-input" placeholder="Kelas / Kelompok (misal: XI-A)...">
+        
+        <button class="btn-action" onclick="handleStart()">Mulai Pertualangan 🚀</button>
+      </div>
+    </div>
+
+    <!-- SCREEN 2: MATERI -->
+    <div id="screenMateri" class="screen">
+      <div class="materi-container">
+        <div class="tab-menu">
+          <button class="tab-link active" onclick="showTab(event, 'mTab1')">1. Pengertian Darsana</button>
+          <button class="tab-link" onclick="showTab(event, 'mTab2')">2. Nawa Darsana</button>
+          <button class="tab-link" onclick="showTab(event, 'mTab3')">3. Sad Darsana</button>
+          <button class="tab-link" onclick="showTab(event, 'mTab4')">4. Matriks Perbandingan</button>
+          <button class="tab-link" onclick="showTab(event, 'mTab5')">5. Abad 21 & STEAM</button>
+        </div>
+
+        <div class="tab-pane">
+          <div id="mTab1" class="tab-content">
+            <h3 style="color: var(--primary); margin-bottom: 8px;">Sub-Materi 1: Hakikat Darsana</h3>
+            <p><strong>Etimologi:</strong> Kata <i>Darsana</i> berasal dari akar kata <b>"drs"</b> (Sanskerta) yang berarti melihat, memandang, atau memahami. Darsana berarti penglihatan atau pandangan tentang kebenaran tattwa.</p><br>
+            <p><strong>Definisi:</strong> Sistem filsafat Hindu yang bersifat pemikiran rasional keagamaan untuk memahami hakikat Tuhan, alam semesta, serta tujuan hidup (Moksha).</p>
+          </div>
+
+          <div id="mTab2" class="tab-content" style="display:none;">
+            <h3 style="color: var(--primary); margin-bottom: 8px;">Sub-Materi 2: Nawa Darsana (9 Aliran)</h3>
+            <p>Sistem filsafat Hindu dibagi menjadi 2 pandangan besar berdasarkan penerimaan terhadap kitab suci Veda:</p>
+            <ul style="margin-left: 20px; margin-top: 5px;">
+              <li><b>ASTIKA (Orthodoks):</b> Menerima otoritas Veda. Terdiri dari 6 aliran (Sad Darsana).</li>
+              <li><b>NASTIKA (Heterodoks):</b> Menolak otoritas Veda. Terdiri dari 3 aliran: Carwaka, Jaina, dan Buddha.</li>
+            </ul>
+          </div>
+
+          <div id="mTab3" class="tab-content" style="display:none;">
+            <h3 style="color: var(--primary); margin-bottom: 8px;">Sub-Materi 3: Enam Aliran Sad Darsana</h3>
+            <ol style="margin-left: 20px;">
+              <li><b>Nyaya:</b> Pendiri Rsi Gautama, fokus logika & Catur Pramana.</li>
+              <li><b>Vaiseshika:</b> Pendiri Rsi Kanada, pembahasan atomis & Sapta Padartha.</li>
+              <li><b>Samkhya:</b> Pendiri Rsi Kapila, dualisme Purusa & Prakrti.</li>
+              <li><b>Yoga:</b> Pendiri Rsi Patanjali, ajaran pengendalian diri & Astangga Yoga.</li>
+              <li><b>Mimamsa:</b> Pendiri Rsi Jaimini, penalaran ritual yajna Veda.</li>
+              <li><b>Vedanta:</b> Pendiri Rsi Badarayana, penafsiran hakikat Brahman & Atman.</li>
+            </ol>
+          </div>
+
+          <div id="mTab4" class="tab-content" style="display:none;">
+            <h3 style="color: var(--primary); margin-bottom: 8px;">Sub-Materi 4: Matriks Perbandingan Tokoh & Ajaran</h3>
+            <p>Setiap aliran memiliki keunggulan pendekatan logika: Nyaya (Logika), Vaiseshika (Fisika Atomis), Samkhya (Sistem Metafisika), Yoga (Praktik Meditasi), Mimamsa (Etika Yajna), Vedanta (Teologi Mutlak).</p>
+          </div>
+
+          <div id="mTab5" class="tab-content" style="display:none;">
+            <h3 style="color: var(--primary); margin-bottom: 8px;">Sub-Materi 5: Darsana & Integrasi STEAM Abad 21</h3>
+            <p>Penerapan Darsana melatih kemampuan berpikir kritis (Critical Thinking) menangkal disinformasi melalui Catur Pramana, serta kolaborasi rasional berbasis Tarka Wada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: KUIS SUB-MATERI (10 SOAL LENGKAP) -->
+    <div id="screenKuis" class="screen">
+      <div class="quiz-container">
+        <!-- Sub-Materi 1 -->
+        <div class="quiz-card">
+          <div class="quiz-question">1. [Sub 1] Akar kata Sanskerta "drs" dalam kata Darsana bermakna...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, false)">A. Mendengar</button>
+            <button class="opt-btn" onclick="answerQuiz(this, true)">B. Melihat / Pandangan Tattwa</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Berjalan</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Melakukan Ritual</button>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question">2. [Sub 1] Istilah lain filsafat Hindu yang bermakna penyelidikan kebenaran adalah...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, true)">A. Wicarasastra</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">B. Susila</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Acara</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Sloka</button>
+          </div>
+        </div>
+
+        <!-- Sub-Materi 2 -->
+        <div class="quiz-card">
+          <div class="quiz-question">3. [Sub 2] Kelompok aliran filsafat yang MENGAKUI otoritas kitab suci Veda dinamakan...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, false)">A. Nastika</button>
+            <button class="opt-btn" onclick="answerQuiz(this, true)">B. Astika</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Carwaka</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Jaina</button>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question">4. [Sub 2] Di bawah ini yang termasuk aliran kelompok Heterodoks (Nastika) adalah...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, false)">A. Nyaya</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">B. Vedanta</button>
+            <button class="opt-btn" onclick="answerQuiz(this, true)">C. Buddha</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Mimamsa</button>
+          </div>
+        </div>
+
+        <!-- Sub-Materi 3 -->
+        <div class="quiz-card">
+          <div class="quiz-question">5. [Sub 3] Rsi pendiri ajaran Nyaya Darsana yang mengutamakan sistem logika adalah...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, true)">A. Rsi Gautama</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">B. Rsi Kapila</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Rsi Kanada</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Rsi Patanjali</button>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question">6. [Sub 3] Ajaran dualisme tentang Purusa (kesadaran) dan Prakrti (materi) diajarkan oleh...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, false)">A. Vaiseshika</button>
+            <button class="opt-btn" onclick="answerQuiz(this, true)">B. Samkhya</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Yoga</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Vedanta</button>
+          </div>
+        </div>
+
+        <!-- Sub-Materi 4 -->
+        <div class="quiz-card">
+          <div class="quiz-question">7. [Sub 4] Tokoh pelopor ajaran Yoga Darsana penyusun Astangga Yoga adalah...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, true)">A. Rsi Patanjali</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">B. Rsi Jaimini</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Rsi Badarayana</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Rsi Gautama</button>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question">8. [Sub 4] Aliran Sad Darsana yang memfokuskan pembahasannya pada hakikat Brahman dan Atman yaitu...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, false)">A. Mimamsa</button>
+            <button class="opt-btn" onclick="answerQuiz(this, true)">B. Vedanta</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Vaiseshika</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Nyaya</button>
+          </div>
+        </div>
+
+        <!-- Sub-Materi 5 -->
+        <div class="quiz-card">
+          <div class="quiz-question">9. [Sub 5] Pengamatan langsung dalam Catur Pramana untuk menyaring informasi di era digital disebut...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, true)">A. Pratyaksa Pramana</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">B. Anumana Pramana</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Upamana Pramana</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Sabda Pramana</button>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-question">10. [Sub 5] Kemampuan 4C abad 21 yang dilatih lewat diskusi rasional Tarka Wada Darsana adalah...</div>
+          <div class="quiz-options">
+            <button class="opt-btn" onclick="answerQuiz(this, false)">A. Communication</button>
+            <button class="opt-btn" onclick="answerQuiz(this, true)">B. Critical Thinking</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">C. Creativity</button>
+            <button class="opt-btn" onclick="answerQuiz(this, false)">D. Computing</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: GAME TTS (GRID 10 SOAL) -->
+    <div id="screenGame" class="screen">
+      <div class="tts-wrapper">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <div class="tts-grid-container" id="ttsGrid">
+            <!-- Dynamic TTS Grid -->
+          </div>
+          <button class="btn-action" style="margin-top: 10px; width: 80%;" onclick="checkTTSAnswers()">Periksa Jawaban TTS 🧩</button>
+        </div>
+
+        <div class="tts-clues">
+          <h4>PETUNJUK MENDATAR (1-5):</h4>
+          <p>1. [S_M_K_Y_A] Filsafat dualisme Purusa & Prakrti.</p>
+          <p>2. [N_Y_A_Y_A] Aliran kebenaran berbasis logika Rsi Gautama.</p>
+          <p>3. [Y_O_G_A] Sistem latihan pengendalian diri Rsi Patanjali.</p>
+          <p>4. [A_S_T_I_K_A] Aliran filsafat yang mengakui Veda.</p>
+          <p>5. [V_E_D_A] Kitab suci utama ajaran Hindu.</p>
+          <br>
+          <h4>PETUNJUK MENURUN (6-10):</h4>
+          <p>6. [D_R_S] Urat kata Sanskerta dari Darsana.</p>
+          <p>7. [G_A_U_T_A_M_A] Pendiri Nyaya Darsana.</p>
+          <p>8. [K_A_P_I_L_A] Rsi pelopor aliran Samkhya.</p>
+          <p>9. [A_T_O_M] Pembahasan partikel kecil Vaiseshika.</p>
+          <p>10. [T_A_T_T_W_A] Kebenaran hakiki dalam Darsana.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span style="font-size: 0.75rem; color: #6B7280; font-weight: 600;">Progres Pembelajaran:</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  let state = {
+    name: '',
+    group: '',
+    score: 0
+  };
+
+  function handleStart() {
+    let name = document.getElementById('studentName').value.trim();
+    let group = document.getElementById('groupName').value.trim();
+
+    if (!name) {
+      alert('Isi nama lengkapmu terlebih dahulu ya!');
+      return;
+    }
+
+    state.name = name;
+    state.group = group;
+    
+    document.getElementById('userBadge').innerText = `Siswa: ${state.name}`;
+    document.getElementById('mascotMessage').innerText = `Halo ${state.name}! Pilihan tepat, ayo pelajari 5 Sub-Materi Darsana di bawah ini!`;
+    
+    document.getElementById('btnMateri').disabled = false;
+    document.getElementById('btnKuis').disabled = false;
+    document.getElementById('btnGame').disabled = false;
+    document.getElementById('progressFill').style.width = '30%';
+
+    navigate('screenMateri');
+  }
+
+  function navigate(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    document.getElementById(screenId).classList.add('active');
+
+    if (screenId === 'screenCover') document.getElementById('btnCover').classList.add('active');
+    if (screenId === 'screenMateri') document.getElementById('btnMateri').classList.add('active');
+    if (screenId === 'screenKuis') document.getElementById('btnKuis').classList.add('active');
+    if (screenId === 'screenGame') document.getElementById('btnGame').classList.add('active');
+  }
+
+  function showTab(evt, tabId) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+
+    document.getElementById(tabId).style.display = 'block';
+    evt.target.classList.add('active');
+  }
+
+  function answerQuiz(btn, isCorrect) {
+    let parent = btn.parentElement;
+    parent.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      state.score += 10;
+      document.getElementById('mascotMessage').innerText = `Hebat ${state.name}! Jawabanmu benar! 🎉 (Skor: ${state.score})`;
+    } else {
+      btn.classList.add('wrong');
+      document.getElementById('mascotMessage').innerText = `Ayo coba pelajari lagi materinya, tetap semangat! 💪`;
+    }
+    
+    document.getElementById('progressFill').style.width = `${Math.min(30 + state.score * 0.7, 100)}%`;
+  }
+
+  /* RENDER GAME TTS GRID */
+  const ttsPattern = [
+    ['1','S','A','M','K','H','Y','A','',''],
+    ['','','','','','','','','',''],
+    ['2','N','Y','A_','Y','A','','','',''],
+    ['','','','','','','','','',''],
+    ['3','Y','O','G','A','','4','A','S','T'],
+    ['','','','','','','','','','I'],
+    ['','5','V','E','D','A','','','','K'],
+    ['','','','','','','','','','A'],
+    ['','','','','','','','','',''],
+    ['','','','','','','','','','']
+  ];
+
+  function renderTTS() {
+    const grid = document.getElementById('ttsGrid');
+    grid.innerHTML = '';
+
+    for (let r = 0; r < 10; r++) {
+      for (let c = 0; c < 10; c++) {
+        let cellData = ttsPattern[r][c];
+        let cell = document.createElement('div');
+        cell.className = 'tts-cell';
+
+        if (cellData === '') {
+          cell.classList.add('black');
+        } else {
+          let num = cellData.length > 1 ? cellData[0] : (isNaN(cellData) ? '' : cellData);
+          let char = cellData.length > 1 ? cellData[1] : (isNaN(cellData) ? cellData : '');
+
+          if (num) {
+            let numSpan = document.createElement('span');
+            numSpan.className = 'tts-number';
+            numSpan.innerText = num;
+            cell.appendChild(numSpan);
+          }
+
+          let input = document.createElement('input');
+          input.className = 'tts-input';
+          input.maxLength = 1;
+          input.dataset.ans = char || cellData;
+          cell.appendChild(input);
+        }
+        grid.appendChild(cell);
+      }
+    }
+  }
+
+  function checkTTSAnswers() {
+    let inputs = document.querySelectorAll('.tts-input');
+    let correct = 0;
+    inputs.forEach(inp => {
+      if (inp.value.toUpperCase() === inp.dataset.ans.toUpperCase()) {
+        correct++;
+        inp.style.color = '#10B981';
+      } else {
+        inp.style.color = '#EF4444';
+      }
+    });
+
+    if (correct === inputs.length) {
+      document.getElementById('mascotMessage').innerText = `Luar Biasa! Kamu berhasil menyelesaikan seluruh Game TTS Darsana! 🏆`;
+      alert('Selamat! Semua isian TTS kamu benar! 🏆');
+    } else {
+      alert(`Kamu berhasil mengisikan ${correct} huruf dengan benar. Periksa kembali sisanya ya!`);
+    }
+  }
+
+  window.onload = function() {
+    renderTTS();
+  };
+</script>
+</body>
+</html>
